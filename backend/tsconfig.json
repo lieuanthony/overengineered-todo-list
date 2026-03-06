@@ -37,6 +37,6 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "prisma.config.ts"],
+  "include": ["api/**/*", "prisma.config.ts", "server.ts"],
   "exclude": ["node_modules", "dist"]
 }
