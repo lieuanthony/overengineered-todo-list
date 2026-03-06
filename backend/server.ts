@@ -1,20 +1,10 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env" });
 
-const app = express();
+import app from "./api/app";
 
-app.use(helmet);
-app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
-    credentials: true,
-}));
-app.use(express.json());
-app.use(cookieParser());
+const PORT = process.env.PORT || 5001;
 
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-export default app;
