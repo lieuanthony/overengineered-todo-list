@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint 'app/**/*.{ts,tsx,js,jsx}'",
     "lint:fix": "eslint 'app/**/*.{ts,tsx,js,jsx}' --fix",
-    "format": "npx prettier --config ../.prettierrc --write 'app/**/*.{ts,tsx,js,jsx,json,md}'"
+    "format": "npx prettier --config ../.prettierrc --write 'app/**/*.{ts,tsx,js,jsx,json,md}'",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "next": "16.1.6",
@@ -29,7 +30,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5"
   }
 }
