@@ -1,0 +1,13 @@
+{
+  "name": "overengineered-todo-list",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format",
+    "format:all": "npm run format:backend && npm run format:frontend"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
+}
