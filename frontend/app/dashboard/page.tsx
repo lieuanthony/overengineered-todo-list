@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
+import DatePicker from "../components/DatePicker";
 
 type Todo = {
   id: string;
@@ -10,10 +11,11 @@ type Todo = {
   completed: boolean;
   dueDate: string | null;
   createdAt: string;
+  updatedAt: string;
 };
 
 type Filter = "all" | "active" | "completed";
-type Sort = "created" | "due";
+type Sort = "created" | "due" | "updated";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,6 +27,17 @@ const formatDate = (iso: string) => {
   if (d.toDateString() === today.toDateString()) return "Today";
   if (d.toDateString() === tomorrow.toDateString()) return "Tomorrow";
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: d.getFullYear() !== today.getFullYear() ? "numeric" : undefined });
+};
+
+const formatDateTime = (iso: string) => {
+  const d = new Date(iso);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  if (d.toDateString() === today.toDateString()) return `Today at ${time}`;
+  if (d.toDateString() === yesterday.toDateString()) return `Yesterday at ${time}`;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: d.getFullYear() !== today.getFullYear() ? "numeric" : undefined }) + ` at ${time}`;
 };
 
 const isOverdue = (iso: string, completed: boolean) => {
@@ -131,6 +144,7 @@ export default function DashboardPage() {
       if (!b.dueDate) return -1;
       return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
     }
+    if (sort === "updated") return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
@@ -192,11 +206,7 @@ export default function DashboardPage() {
               style={{ padding: "10px 18px", fontSize: 13, fontWeight: 500, background: accent, color: "#fff", border: "none", borderRadius: 8, cursor: newTitle.trim() ? "pointer" : "not-allowed", fontFamily: "inherit", opacity: newTitle.trim() ? 1 : 0.5, flexShrink: 0 }}
             >Add</button>
           </div>
-          <input type="date" value={newDueDate} onChange={e => setNewDueDate(e.target.value)}
-            style={{ ...inputStyle, width: "fit-content", fontSize: 12, color: newDueDate ? text : muted }}
-            onFocus={e => e.currentTarget.style.borderColor = accent}
-            onBlur={e => e.currentTarget.style.borderColor = border}
-          />
+          <DatePicker value={newDueDate} onChange={setNewDueDate} placeholder="Set due date" />
         </form>
 
         {/* Filter + sort controls */}
@@ -208,6 +218,7 @@ export default function DashboardPage() {
           </div>
           <div style={{ display: "flex", gap: 6 }}>
             {chipBtn(sort === "created", () => setSort("created"), "Newest")}
+            {chipBtn(sort === "updated", () => setSort("updated"), "Recently updated")}
             {chipBtn(sort === "due", () => setSort("due"), "Due date")}
           </div>
         </div>
@@ -254,11 +265,7 @@ export default function DashboardPage() {
                         onBlur={e => e.currentTarget.style.borderColor = border}
                       />
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <input type="date" value={editingDueDate} onChange={e => setEditingDueDate(e.target.value)}
-                          style={{ ...inputStyle, padding: "4px 8px", fontSize: 12, width: "auto" }}
-                          onFocus={e => e.currentTarget.style.borderColor = accent}
-                          onBlur={e => e.currentTarget.style.borderColor = border}
-                        />
+                        <DatePicker value={editingDueDate} onChange={setEditingDueDate} placeholder="Set due date" />
                         <button onClick={() => handleEditSave(todo.id)} style={{ fontSize: 12, color: accent, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>Save</button>
                         <button onClick={() => setEditingId(null)} style={{ fontSize: 12, color: muted, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>Cancel</button>
                       </div>
@@ -274,6 +281,10 @@ export default function DashboardPage() {
                           {overdue ? "Overdue · " : ""}{formatDate(todo.dueDate)}
                         </p>
                       )}
+                      <p style={{ margin: "3px 0 0", fontSize: 11, color: muted }}>
+                        Created {formatDateTime(todo.createdAt)}
+                        {todo.updatedAt !== todo.createdAt && ` · Updated ${formatDateTime(todo.updatedAt)}`}
+                      </p>
                     </>
                   )}
                 </div>
