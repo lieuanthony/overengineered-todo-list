@@ -17,10 +17,14 @@ export const editTodo = async (id: string, userId: string, data: { title?: strin
   const todo = await findTodoById(id, userId);
   if (!todo) throw new Error("Todo not found");
   if (data.title !== undefined && !data.title.trim()) throw new Error("Title cannot be empty");
-  return updateTodo(id, userId, {
-    ...data,
-    dueDate: data.dueDate === null ? null : data.dueDate ? new Date(data.dueDate) : undefined,
-  });
+
+  const update: { title?: string; completed?: boolean; dueDate?: Date | null } = {
+    ...(data.title !== undefined && { title: data.title.trim() }),
+    ...(data.completed !== undefined && { completed: data.completed }),
+    ...(data.dueDate !== undefined && { dueDate: data.dueDate ? new Date(data.dueDate) : null }),
+  };
+
+  return updateTodo(id, userId, update);
 };
 
 export const removeTodo = async (id: string, userId: string) => {

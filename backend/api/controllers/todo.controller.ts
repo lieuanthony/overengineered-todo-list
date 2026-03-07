@@ -26,7 +26,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { title, completed, dueDate } = req.body;
     const todo = await editTodo(id, req.user!.userId, { title, completed, dueDate });
     res.json(todo);
@@ -45,7 +45,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await removeTodo(id, req.user!.userId);
     res.status(204).send();
   } catch (error: unknown) {
