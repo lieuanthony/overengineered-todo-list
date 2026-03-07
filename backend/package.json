@@ -10,7 +10,7 @@
     "build": "tsc",
     "lint": "eslint 'api/**/*.{ts,js}'",
     "lint:fix": "eslint 'api/**/*.{ts,js}' --fix",
-    "format": "npx prettier --config ../.prettierrc --write 'api/**/*.{ts,js,json,md}'",
+    "format": "npx prettier --config ../.prettierrc --write 'api/**/*.{ts,js,json,md}' && npx prisma format",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
