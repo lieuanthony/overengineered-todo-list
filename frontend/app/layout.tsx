@@ -3,6 +3,7 @@ import ThemeProvider from "./providers/ThemeProvider";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./globals.css";
+import "./animations.css"
 
 export const metadata: Metadata = {
   title: "Todo",

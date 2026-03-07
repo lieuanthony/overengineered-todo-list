@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import { ACCENT, NOISE } from "../constants";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter();
   const theme = useTheme();
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -40,11 +39,11 @@ export default function RegisterPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.message || "Something went wrong"); return; }
@@ -66,20 +65,16 @@ export default function RegisterPage() {
           <div style={{ marginBottom: 36 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div style={{ width: 24, height: 1, background: ACCENT }} />
-              <span style={{ fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase", color: ACCENT, fontFamily: "system-ui, sans-serif" }}>Get started</span>
+              <span style={{ fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase", color: ACCENT, fontFamily: "system-ui, sans-serif" }}>Welcome back</span>
             </div>
             <h1 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 400, fontFamily: "'Georgia', serif" }}>
-              Create your<br />
-              <em style={{ fontStyle: "italic", color: ACCENT }}>free account.</em>
+              Sign in to<br />
+              <em style={{ fontStyle: "italic", color: ACCENT }}>your tasks.</em>
             </h1>
           </div>
 
           <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 4, padding: "32px 28px" }}>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Name</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="John Doe" required style={inputStyle} />
-              </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Email</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="you@example.com" required style={inputStyle} />
@@ -95,8 +90,8 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              <button type="submit" disabled={loading} style={{ marginTop: 4, padding: "12px", fontSize: 13, fontWeight: 600, color: "#FFFFFF", background: loading ? muted : ACCENT, border: "none", borderRadius: 4, cursor: loading ? "not-allowed" : "pointer", fontFamily: "system-ui, sans-serif", letterSpacing: "0.02em", transition: "opacity 0.2s" }}>
-                {loading ? "Creating account..." : "Create account →"}
+              <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 4, padding: "12px", fontSize: 13, fontWeight: 600, color: "#FFFFFF", background: loading ? muted : ACCENT, border: "none", borderRadius: 4, cursor: loading ? "not-allowed" : "pointer", fontFamily: "system-ui, sans-serif", letterSpacing: "0.02em" }}>
+                {loading ? "Signing in..." : "Sign in →"}
               </button>
             </form>
           </div>

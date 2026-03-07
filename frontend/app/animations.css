@@ -1,0 +1,63 @@
+/* Underline grow — for text links like "Sign up", "Sign in" */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.2s ease;
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Primary button — modest lift + soft shadow */
+.btn-primary {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: none;
+  transition: transform 0.08s ease, box-shadow 0.08s ease !important;
+}
+
+/* Ghost button — modest lift + soft shadow */
+.btn-ghost {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.btn-ghost:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+.btn-ghost:active {
+  transform: scale(0.97);
+  box-shadow: none;
+  transition: transform 0.08s ease, box-shadow 0.08s ease !important;
+}
+
+/* Nav logo */
+.nav-logo {
+  transition: opacity 0.15s ease;
+}
+.nav-logo:hover {
+  opacity: 0.65;
+}
+
+
+/* Nav logo */
+.nav-logo {
+  transition: opacity 0.15s ease;
+}
+.nav-logo:hover {
+  opacity: 0.65;
+}

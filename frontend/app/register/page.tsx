@@ -24,7 +24,15 @@ export default function RegisterPage() {
     width: "100%", padding: "10px 14px", fontSize: 14, borderRadius: 6,
     border: `1px solid ${border}`, background: bg, color: text,
     outline: "none", boxSizing: "border-box" as const,
-    fontFamily: "system-ui, sans-serif", transition: "border-color 0.15s",
+    fontFamily: "system-ui, sans-serif", transition: "border-color 0.2s",
+  };
+
+  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = ACCENT;
+  };
+
+  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = border;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,15 +78,15 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Name</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="John Doe" required style={inputStyle} />
+                <input type="text" value={name} onChange={e => setName(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="John Doe" required style={inputStyle} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle} />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="you@example.com" required style={inputStyle} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required style={inputStyle} />
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="••••••••" required style={inputStyle} />
               </div>
 
               {error && (
@@ -87,7 +95,7 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              <button type="submit" disabled={loading} style={{ marginTop: 4, padding: "12px", fontSize: 13, fontWeight: 600, color: "#FFFFFF", background: loading ? muted : ACCENT, border: "none", borderRadius: 4, cursor: loading ? "not-allowed" : "pointer", fontFamily: "system-ui, sans-serif", letterSpacing: "0.02em", transition: "opacity 0.2s" }}>
+              <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 4, padding: "12px", fontSize: 13, fontWeight: 600, color: "#FFFFFF", background: loading ? muted : ACCENT, border: "none", borderRadius: 4, cursor: loading ? "not-allowed" : "pointer", fontFamily: "system-ui, sans-serif", letterSpacing: "0.02em" }}>
                 {loading ? "Creating account..." : "Create account →"}
               </button>
             </form>

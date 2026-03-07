@@ -41,10 +41,10 @@ export default function Home() {
           </p>
 
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <Link href="/register" style={{ display: "inline-flex", alignItems: "center", gap: 12, background: ACCENT, color: "#FFFFFF", textDecoration: "none", padding: "14px 28px", fontSize: 13, letterSpacing: "0.02em", fontFamily: "system-ui, sans-serif" }}>
+            <Link href="/register" className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: 12, background: ACCENT, color: "#FFFFFF", textDecoration: "none", padding: "14px 28px", fontSize: 13, letterSpacing: "0.02em", fontFamily: "system-ui, sans-serif" }}>
               Get started free →
             </Link>
-            <Link href="/login" style={{ display: "inline-flex", alignItems: "center", border: `1px solid ${border}`, color: text, textDecoration: "none", padding: "14px 28px", fontSize: 13, letterSpacing: "0.02em", fontFamily: "system-ui, sans-serif" }}>
+            <Link href="/login" className="btn-ghost" style={{ display: "inline-flex", alignItems: "center", border: `1px solid ${border}`, color: text, textDecoration: "none", padding: "14px 28px", fontSize: 13, letterSpacing: "0.02em", fontFamily: "system-ui, sans-serif" }}>
               Sign in
             </Link>
           </div>

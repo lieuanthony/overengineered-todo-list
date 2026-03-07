@@ -24,7 +24,7 @@ export default function Navbar() {
       return (
         <span style={{ fontSize: 13, color: muted, fontFamily: "system-ui, sans-serif" }}>
           No account?{" "}
-          <Link href="/register" style={{ color: ACCENT, textDecoration: "none", fontWeight: 500 }}>Sign up</Link>
+          <Link href="/register" className="link-underline" style={{ color: ACCENT, textDecoration: "none", fontWeight: 500 }}>Sign up</Link>
         </span>
       );
     }
@@ -32,15 +32,15 @@ export default function Navbar() {
       return (
         <span style={{ fontSize: 13, color: muted, fontFamily: "system-ui, sans-serif" }}>
           Have an account?{" "}
-          <Link href="/login" style={{ color: ACCENT, textDecoration: "none", fontWeight: 500 }}>Sign in</Link>
+          <Link href="/login" className="link-underline" style={{ color: ACCENT, textDecoration: "none", fontWeight: 500 }}>Sign in</Link>
         </span>
       );
     }
     if (pathname === "/") {
       return (
         <>
-          <Link href="/login" style={{ fontSize: 13, color: muted, textDecoration: "none", fontFamily: "system-ui, sans-serif" }}>Sign in</Link>
-          <Link href="/register" style={{ fontSize: 13, background: text, color: bg, textDecoration: "none", padding: "8px 18px", fontFamily: "system-ui, sans-serif" }}>Get started</Link>
+          <Link href="/login" className="link-underline" style={{ fontSize: 13, color: muted, textDecoration: "none", fontFamily: "system-ui, sans-serif" }}>Sign in</Link>
+          <Link href="/register" className="btn-primary" style={{ fontSize: 13, background: text, color: bg, textDecoration: "none", padding: "8px 18px", fontFamily: "system-ui, sans-serif" }}>Get started</Link>
         </>
       );
     }
@@ -49,7 +49,7 @@ export default function Navbar() {
 
   return (
     <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px 64px", borderBottom: `1px solid ${border}`, position: "relative", zIndex: 10 }}>
-      <Link href="/" style={{ fontSize: 15, fontWeight: 600, fontFamily: "system-ui, sans-serif", letterSpacing: "-0.3px", color: text, textDecoration: "none" }}>
+      <Link href="/" className="nav-logo" style={{ fontSize: 15, fontWeight: 600, fontFamily: "system-ui, sans-serif", letterSpacing: "-0.3px", color: text, textDecoration: "none" }}>
         Todo
       </Link>
       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
