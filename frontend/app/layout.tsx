@@ -3,7 +3,6 @@ import ThemeProvider from "./providers/ThemeProvider";
 import AuthProvider from "./providers/AuthProvider";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import CssBaseline from "@mui/material/CssBaseline";
 import "./globals.css";
 import "./animations.css";
 
@@ -18,7 +17,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <AuthProvider>
-            <CssBaseline />
             <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
               <Navbar />
               {children}

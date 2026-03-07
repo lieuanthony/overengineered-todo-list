@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import { useAuth } from "../providers/AuthProvider";
@@ -8,7 +8,11 @@ import { useAuth } from "../providers/AuthProvider";
 export default function LoginPage() {
   const router = useRouter();
   const theme = useTheme();
-  const { setAccessToken } = useAuth();
+  const { setAccessToken, accessToken, ready } = useAuth();
+
+  useEffect(() => {
+    if (ready && accessToken) router.replace("/dashboard");
+  }, [ready, accessToken]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -57,7 +61,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main style={{ minHeight: "calc(100vh - 120px)", display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", padding: "0 20px" }}>
+    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", padding: "0 20px" }}>
       <div style={{ width: "100%", maxWidth: 360 }}>
         <div style={{ marginBottom: 20 }}>
           <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 18 }}>Sign in</p>

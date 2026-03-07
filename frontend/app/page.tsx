@@ -1,15 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
+import { useAuth } from "./providers/AuthProvider";
 
 export default function Home() {
   const theme = useTheme();
+  const router = useRouter();
+  const { accessToken, ready } = useAuth();
+
   const bg = theme.palette.background.default;
   const text = theme.palette.text.primary;
   const muted = theme.palette.text.secondary;
   const border = theme.palette.divider;
   const accent = theme.palette.primary.main;
+
+  useEffect(() => {
+    if (ready && accessToken) router.replace("/dashboard");
+  }, [ready, accessToken]);
+
+  if (!ready) return (
+    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg }} />
+  );
 
   return (
     <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", overflow: "hidden" }}>
