@@ -7,10 +7,12 @@ import { IconButton } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useThemeMode } from "../providers/ThemeProvider";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function Navbar() {
   const theme = useTheme();
   const { setMode, resolvedMode } = useThemeMode();
+  const { logout } = useAuth();
   const pathname = usePathname();
 
   const text = theme.palette.text.primary;
@@ -26,10 +28,7 @@ export default function Navbar() {
     if (pathname === "/dashboard") return (
       <button
         className="link-underline"
-        onClick={() => {
-          localStorage.removeItem("accessToken");
-          window.location.href = "/";
-        }}
+        onClick={async () => { await logout(); window.location.href = "/"; }}
         style={{ fontSize: 13, color: muted, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}
       >
         Sign out

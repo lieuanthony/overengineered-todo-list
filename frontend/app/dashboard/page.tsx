@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import DatePicker from "../components/DatePicker";
+import { useAuth } from "../providers/AuthProvider";
 
 type Todo = {
   id: string;
@@ -48,6 +49,7 @@ const isOverdue = (iso: string, completed: boolean) => {
 export default function DashboardPage() {
   const router = useRouter();
   const theme = useTheme();
+  const { accessToken, refresh, logout, ready } = useAuth();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("created");
@@ -67,13 +69,13 @@ export default function DashboardPage() {
   const border = theme.palette.divider;
   const accent = theme.palette.primary.main;
 
-  const token = () => localStorage.getItem("accessToken");
-  const authHeaders = () => ({ "Content-Type": "application/json", Authorization: `Bearer ${token()}` });
+  const authHeaders = () => ({ "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` });
 
   useEffect(() => {
-    if (!token()) { router.push("/login"); return; }
+    if (!ready) return;
+    if (!accessToken) { router.push("/login"); return; }
     fetchTodos();
-  }, []);
+  }, [ready, accessToken]);
 
   useEffect(() => {
     if (editingId && editInputRef.current) editInputRef.current.focus();
@@ -176,6 +178,12 @@ export default function DashboardPage() {
       onMouseEnter={e => (e.currentTarget.style.color = hoverColor)}
       onMouseLeave={e => (e.currentTarget.style.color = muted)}
     >{icon}</button>
+  );
+
+  if (!ready) return (
+    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: muted, fontFamily: "inherit", fontSize: 15 }}>
+      Loading...
+    </main>
   );
 
   if (loading) return (

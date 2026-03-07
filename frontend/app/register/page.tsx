@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function RegisterPage() {
   const router = useRouter();
   const theme = useTheme();
+  const { setAccessToken } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +57,7 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.message || "Something went wrong"); return; }
-      localStorage.setItem("accessToken", data.accessToken);
+      setAccessToken(data.accessToken);
       router.push("/dashboard");
     } catch {
       setError("Unable to connect to server");
@@ -65,7 +67,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", padding: "0 20px" }}>
+    <main style={{ minHeight: "calc(100vh - 120px)", display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", padding: "0 20px" }}>
       <div style={{ width: "100%", maxWidth: 360 }}>
         <div style={{ marginBottom: 20 }}>
           <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 18 }}>Create an account</p>
@@ -136,12 +138,12 @@ export default function RegisterPage() {
 
             {error && <p style={{ margin: 0, fontSize: 12, color: "#e53e3e", fontFamily: "inherit" }}>{error}</p>}
 
-            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 2, padding: "10px", fontSize: 13, fontWeight: 500, color: "#fff", background: loading ? muted : accent, border: "none", borderRadius: 8, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit" }}>
+            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 2, padding: "10px", fontSize: 13, fontWeight: 500, color: "#fff", background: loading ? muted : accent, border: "none", borderRadius: 8, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", width: "100%" }}>
               {loading ? "Creating account..." : "Create account"}
             </button>
             <p style={{ margin: 0, fontSize: 12, color: muted, textAlign: "center", fontFamily: "inherit" }}>
               Already have an account?{" "}
-              <a href="/login" style={{ color: accent, textDecoration: "none" }}>Sign in</a>
+              <a href="/login" className="link-underline" style={{ color: accent, textDecoration: "none" }}>Sign in</a>
             </p>
           </form>
         </div>
