@@ -27,6 +27,7 @@ model Todo {
   id        String   @id @default(cuid())
   title     String
   completed Boolean  @default(false)
+  dueDate   DateTime? 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String

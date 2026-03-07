@@ -6,7 +6,7 @@
     "schema": "prisma/schema.prisma"
   },
   "scripts": {
-    "dev": "tsx watch server.ts",
+    "dev": "tsx watch server.ts && npx prisma migrate dev",
     "build": "tsc",
     "lint": "eslint 'api/**/*.{ts,js}'",
     "lint:fix": "eslint 'api/**/*.{ts,js}' --fix",
