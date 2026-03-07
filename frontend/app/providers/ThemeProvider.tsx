@@ -89,7 +89,6 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return (
     <ThemeContext.Provider value={{ mode, setMode, resolvedMode }}>
       <MuiThemeProvider theme={theme}>
-        <CssBaseline />
         {children}
       </MuiThemeProvider>
     </ThemeContext.Provider>

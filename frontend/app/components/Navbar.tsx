@@ -38,14 +38,27 @@ export default function Navbar() {
         <Link href="/register" className="btn-primary" style={{ fontSize: 13, background: accent, color: "#fff", textDecoration: "none", padding: "8px 16px", borderRadius: 8, fontFamily: "inherit", fontWeight: 500 }}>Get started</Link>
       </>
     );
+    if (pathname === "/dashboard") return (
+      <button
+        className="link-underline"
+        onClick={() => {
+          localStorage.removeItem("accessToken");
+          window.location.href = "/";
+        }}
+        style={{ fontSize: 13, color: muted, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}
+      >
+        Sign out
+      </button>
+    );
     return null;
   };
 
   return (
     <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 48px", borderBottom: `1px solid ${border}`, background: bg }}>
-      <Link href="/" style={{ fontSize: 15, fontWeight: 600, fontFamily: "inherit", color: accent, textDecoration: "none" }}>
-        todo
-      </Link>
+      {pathname === "/dashboard"
+        ? <span style={{ fontSize: 15, fontWeight: 600, fontFamily: "inherit", color: accent }}>todo</span>
+        : <Link href="/" style={{ fontSize: 15, fontWeight: 600, fontFamily: "inherit", color: accent, textDecoration: "none" }}>todo</Link>
+      }
       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
         <IconButton onClick={() => setMode(resolvedMode === "light" ? "dark" : "light")} size="small" style={{ color: muted }}>
           {resolvedMode === "dark" ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
