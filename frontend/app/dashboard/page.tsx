@@ -163,16 +163,6 @@ export default function DashboardPage() {
     boxSizing: "border-box" as const,
   };
 
-  const chipBtn = (active: boolean, onClick: () => void, label: string) => (
-    <button onClick={onClick} style={{
-      padding: "6px 14px", fontSize: 13, borderRadius: 6, fontFamily: "inherit",
-      border: `1px solid ${active ? accent : border}`,
-      background: active ? accent : "transparent",
-      color: active ? "#fff" : muted,
-      cursor: "pointer", transition: "all 0.15s",
-    }}>{label}</button>
-  );
-
   const iconBtn = (onClick: () => void, title: string, hoverColor: string, icon: React.ReactNode) => (
     <button onClick={onClick} title={title} style={{ background: "none", border: "none", cursor: "pointer", color: muted, padding: 6, display: "flex", alignItems: "center", borderRadius: 4, transition: "color 0.15s" }}
       onMouseEnter={e => (e.currentTarget.style.color = hoverColor)}
@@ -192,14 +182,61 @@ export default function DashboardPage() {
     </main>
   );
 
+  const completed = todos.filter(t => t.completed).length;
+  const total = todos.length;
+  const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+  const allDone = total > 0 && completed === total;
+
   return (
     <main style={{ flex: 1, background: bg, color: text, fontFamily: "inherit", padding: "48px 32px", display: "flex", justifyContent: "center", overflowY: "auto" }}>
       <div style={{ width: "100%", maxWidth: 680 }}>
 
+
+
         {/* Header */}
-        <div style={{ marginBottom: 28 }}>
-          <p style={{ margin: "0 0 6px", fontWeight: 600, fontSize: 22 }}>My todos</p>
-          <p style={{ margin: 0, fontSize: 14, color: muted }}>{todos.filter(t => !t.completed).length} remaining</p>
+        <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 24 }}>
+
+          {/* Circular ring */}
+          {total > 0 && (() => {
+            const size = 80;
+            const strokeWidth = 6;
+            const radius = (size - strokeWidth) / 2;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (pct / 100) * circumference;
+            return (
+              <div style={{ position: "relative", flexShrink: 0, width: size, height: size }}>
+                <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+                  {/* Track */}
+                  <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={border} strokeWidth={strokeWidth} />
+                  {/* Progress */}
+                  <circle
+                    cx={size / 2} cy={size / 2} r={radius}
+                    fill="none"
+                    stroke={accent}
+                    strokeWidth={strokeWidth}
+                    strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={offset}
+                    style={{ transition: "stroke-dashoffset 0.4s ease, stroke 0.4s ease", opacity: allDone ? 1 : 0.8 }}
+                  />
+                </svg>
+                {/* Center label */}
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: allDone ? accent : text, lineHeight: 1, fontFamily: "inherit" }}>{pct}%</span>
+                </div>
+              </div>
+            );
+          })()}
+
+          <div style={{ flex: 1 }}>
+            <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 22 }}>My todos</p>
+            <p style={{ margin: 0, fontSize: 14, color: allDone ? accent : muted, fontWeight: allDone ? 600 : 400, transition: "color 0.3s" }}>
+              {allDone ? "All done! Great work 🎉" : `${todos.filter(t => !t.completed).length} remaining`}
+            </p>
+            {total > 0 && !allDone && (
+              <p style={{ margin: "2px 0 0", fontSize: 12, color: muted }}>{completed} of {total} completed</p>
+            )}
+          </div>
         </div>
 
         {/* Create form */}
@@ -219,16 +256,16 @@ export default function DashboardPage() {
 
         {/* Filter + sort controls */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 8 }}>
-          <div style={{ display: "flex", gap: 8 }}>
-            {chipBtn(filter === "all", () => setFilter("all"), "All")}
-            {chipBtn(filter === "active", () => setFilter("active"), "Active")}
-            {chipBtn(filter === "completed", () => setFilter("completed"), "Completed")}
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            {chipBtn(sort === "created", () => setSort("created"), "Newest")}
-            {chipBtn(sort === "updated", () => setSort("updated"), "Recently updated")}
-            {chipBtn(sort === "due", () => setSort("due"), "Due date")}
-          </div>
+          <select value={filter} onChange={e => setFilter(e.target.value as Filter)} style={{ ...inputStyle, padding: "6px 12px", fontSize: 13, cursor: "pointer", width: "auto" }}>
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </select>
+          <select value={sort} onChange={e => setSort(e.target.value as Sort)} style={{ ...inputStyle, padding: "6px 12px", fontSize: 13, cursor: "pointer", width: "auto" }}>
+            <option value="created">Newest</option>
+            <option value="updated">Recently updated</option>
+            <option value="due">Due date</option>
+          </select>
         </div>
 
         {error && <p style={{ margin: "0 0 14px", fontSize: 14, color: "#e53e3e" }}>{error}</p>}
@@ -321,11 +358,6 @@ export default function DashboardPage() {
           })}
         </div>
 
-        {todos.length > 0 && (
-          <p style={{ margin: "14px 0 0", fontSize: 13, color: muted, textAlign: "right" }}>
-            {todos.filter(t => t.completed).length} of {todos.length} completed
-          </p>
-        )}
       </div>
     </main>
   );
