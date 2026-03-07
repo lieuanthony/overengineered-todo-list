@@ -5,7 +5,8 @@ const config: Config = {
   testEnvironment: "node",
   roots: ["<rootDir>/test"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
+  "^@/config/prisma$": "<rootDir>/src/config/__mocks__/prisma.ts",
+  "^@/(.*)$": "<rootDir>/src/$1",
   },
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   clearMocks: true,
