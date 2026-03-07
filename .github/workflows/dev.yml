@@ -1,4 +1,4 @@
-name: Dev — Test
+name: Dev - Test
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    environment: testing
     name: Run backend tests
     runs-on: ubuntu-latest
 
