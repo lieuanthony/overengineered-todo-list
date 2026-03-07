@@ -9,9 +9,7 @@
     "format:backend": "cd backend && npm run format",
     "format:frontend": "cd frontend && npm run format",
     "format:all": "npm run format:backend && npm run format:frontend",
-    "test:backend": "cd backend && npm test",
-    "test:frontend": "cd frontend && npm test",
-    "test:all": "npm run test:backend && npm run test:frontend",
+    "test:all": "npm run test --workspace=backend",
     "stop": "docker compose down && lsof -ti :3000 | xargs kill; lsof -ti :3000 | xargs kill; lsof -ti :5001 | xargs kill"  
 },
   "devDependencies": {

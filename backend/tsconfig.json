@@ -8,7 +8,7 @@
     // Environment Settings
     "module": "CommonJS",
     "target": "ES2020",
-    "types": ["node"],   // Include Node types
+    "types": ["node", "jest"],   // Include Node and Jest types
     "lib": ["ES2020"],   // Modern JS features
 
     // Other Outputs
@@ -37,6 +37,6 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "include": ["api/**/*", "prisma.config.ts", "server.ts"],
+  "include": ["src/**/*", "test/**/*", "prisma.config.ts", "server.ts"],
   "exclude": ["node_modules", "dist"]
 }
