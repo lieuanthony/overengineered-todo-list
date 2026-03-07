@@ -22,4 +22,9 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes)
 app.use("/api/todos", todoRoutes)
 
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error(err.message);
+  res.status(500).json({ error: err.message });
+});
+
 export default app;
