@@ -18,6 +18,14 @@ export default function Home() {
         <p style={{ margin: 0, maxWidth: 480, color: muted, fontSize: 14, lineHeight: 1.7 }}>
           A simple place to capture your tasks, track your progress, and get things done.
         </p>
+        <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
+          <Link href="/register" className="btn-primary" style={{ fontSize: 13, fontWeight: 500, background: accent, color: "#fff", textDecoration: "none", padding: "10px 20px", borderRadius: 8, fontFamily: "inherit" }}>
+            Get started
+          </Link>
+          <Link href="/login" className="btn-primary" style={{ fontSize: 13, fontWeight: 500, background: "transparent", color: text, textDecoration: "none", padding: "10px 20px", borderRadius: 8, border: `1px solid ${border}`, fontFamily: "inherit" }}>
+            Sign in
+          </Link>
+        </div>
       </div>
     </main>
   );

@@ -99,6 +99,10 @@ export default function LoginPage() {
             <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 2, padding: "10px", fontSize: 13, fontWeight: 500, color: "#fff", background: loading ? muted : accent, border: "none", borderRadius: 8, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit" }}>
               {loading ? "Signing in..." : "Sign in"}
             </button>
+            <p style={{ margin: 0, fontSize: 12, color: muted, textAlign: "center", fontFamily: "inherit" }}>
+              No account?{" "}
+              <a href="/register" style={{ color: accent, textDecoration: "none" }}>Sign up</a>
+            </p>
           </form>
         </div>
       </div>

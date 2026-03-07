@@ -20,24 +20,9 @@ export default function Navbar() {
   const accent = theme.palette.primary.main;
 
   const renderLinks = () => {
-    if (pathname === "/login") return (
-      <span style={{ fontSize: 13, color: muted, fontFamily: "inherit" }}>
-        No account?{" "}
-        <Link href="/register" className="link-underline" style={{ color: accent, textDecoration: "none", fontWeight: 500 }}>Sign up</Link>
-      </span>
-    );
-    if (pathname === "/register") return (
-      <span style={{ fontSize: 13, color: muted, fontFamily: "inherit" }}>
-        Have an account?{" "}
-        <Link href="/login" className="link-underline" style={{ color: accent, textDecoration: "none", fontWeight: 500 }}>Sign in</Link>
-      </span>
-    );
-    if (pathname === "/") return (
-      <>
-        <Link href="/login" className="link-underline" style={{ fontSize: 13, color: muted, textDecoration: "none", fontFamily: "inherit" }}>Sign in</Link>
-        <Link href="/register" className="btn-primary" style={{ fontSize: 13, background: accent, color: "#fff", textDecoration: "none", padding: "8px 16px", borderRadius: 8, fontFamily: "inherit", fontWeight: 500 }}>Get started</Link>
-      </>
-    );
+    if (pathname === "/login") return null;
+    if (pathname === "/register") return null;
+    if (pathname === "/") return null;
     if (pathname === "/dashboard") return (
       <button
         className="link-underline"
