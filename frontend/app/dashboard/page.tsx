@@ -231,7 +231,7 @@ export default function DashboardPage() {
           <div style={{ flex: 1 }}>
             <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 22 }}>My todos</p>
             <p style={{ margin: 0, fontSize: 14, color: allDone ? accent : muted, fontWeight: allDone ? 600 : 400, transition: "color 0.3s" }}>
-              {allDone ? "All done! Great work 🎉" : `${todos.filter(t => !t.completed).length} remaining`}
+              {allDone ? "All done!" : `${todos.filter(t => !t.completed).length} remaining`}
             </p>
             {total > 0 && !allDone && (
               <p style={{ margin: "2px 0 0", fontSize: 12, color: muted }}>{completed} of {total} completed</p>
