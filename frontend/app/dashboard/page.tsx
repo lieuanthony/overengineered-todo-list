@@ -155,7 +155,7 @@ export default function DashboardPage() {
   });
 
   const inputStyle = {
-    padding: "10px 14px", fontSize: 13, borderRadius: 8,
+    padding: "12px 16px", fontSize: 15, borderRadius: 8,
     border: `1px solid ${border}`, background: bg, color: text,
     outline: "none", fontFamily: "inherit", transition: "border-color 0.2s",
     boxSizing: "border-box" as const,
@@ -163,7 +163,7 @@ export default function DashboardPage() {
 
   const chipBtn = (active: boolean, onClick: () => void, label: string) => (
     <button onClick={onClick} style={{
-      padding: "5px 12px", fontSize: 12, borderRadius: 6, fontFamily: "inherit",
+      padding: "6px 14px", fontSize: 13, borderRadius: 6, fontFamily: "inherit",
       border: `1px solid ${active ? accent : border}`,
       background: active ? accent : "transparent",
       color: active ? "#fff" : muted,
@@ -172,83 +172,83 @@ export default function DashboardPage() {
   );
 
   const iconBtn = (onClick: () => void, title: string, hoverColor: string, icon: React.ReactNode) => (
-    <button onClick={onClick} title={title} style={{ background: "none", border: "none", cursor: "pointer", color: muted, padding: 4, display: "flex", alignItems: "center", borderRadius: 4, transition: "color 0.15s" }}
+    <button onClick={onClick} title={title} style={{ background: "none", border: "none", cursor: "pointer", color: muted, padding: 6, display: "flex", alignItems: "center", borderRadius: 4, transition: "color 0.15s" }}
       onMouseEnter={e => (e.currentTarget.style.color = hoverColor)}
       onMouseLeave={e => (e.currentTarget.style.color = muted)}
     >{icon}</button>
   );
 
   if (loading) return (
-    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: muted, fontFamily: "inherit", fontSize: 13 }}>
+    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: muted, fontFamily: "inherit", fontSize: 15 }}>
       Loading...
     </main>
   );
 
   return (
-    <main style={{ flex: 1, background: bg, color: text, fontFamily: "inherit", padding: "40px 24px", display: "flex", justifyContent: "center", overflowY: "auto" }}>
-      <div style={{ width: "100%", maxWidth: 560 }}>
+    <main style={{ flex: 1, background: bg, color: text, fontFamily: "inherit", padding: "48px 32px", display: "flex", justifyContent: "center", overflowY: "auto" }}>
+      <div style={{ width: "100%", maxWidth: 680 }}>
 
         {/* Header */}
-        <div style={{ marginBottom: 24 }}>
-          <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 18 }}>My todos</p>
-          <p style={{ margin: 0, fontSize: 13, color: muted }}>{todos.filter(t => !t.completed).length} remaining</p>
+        <div style={{ marginBottom: 28 }}>
+          <p style={{ margin: "0 0 6px", fontWeight: 600, fontSize: 22 }}>My todos</p>
+          <p style={{ margin: 0, fontSize: 14, color: muted }}>{todos.filter(t => !t.completed).length} remaining</p>
         </div>
 
         {/* Create form */}
-        <form onSubmit={handleCreate} style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-          <div style={{ display: "flex", gap: 8 }}>
+        <form onSubmit={handleCreate} style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+          <div style={{ display: "flex", gap: 10 }}>
             <input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Add a new todo..."
               style={{ ...inputStyle, flex: 1 }}
               onFocus={e => e.currentTarget.style.borderColor = accent}
               onBlur={e => e.currentTarget.style.borderColor = border}
             />
             <button type="submit" disabled={!newTitle.trim()} className="btn-primary"
-              style={{ padding: "10px 18px", fontSize: 13, fontWeight: 500, background: accent, color: "#fff", border: "none", borderRadius: 8, cursor: newTitle.trim() ? "pointer" : "not-allowed", fontFamily: "inherit", opacity: newTitle.trim() ? 1 : 0.5, flexShrink: 0 }}
+              style={{ padding: "12px 22px", fontSize: 15, fontWeight: 500, background: accent, color: "#fff", border: "none", borderRadius: 8, cursor: newTitle.trim() ? "pointer" : "not-allowed", fontFamily: "inherit", opacity: newTitle.trim() ? 1 : 0.5, flexShrink: 0 }}
             >Add</button>
           </div>
           <DatePicker value={newDueDate} onChange={setNewDueDate} placeholder="Set due date" />
         </form>
 
         {/* Filter + sort controls */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
-          <div style={{ display: "flex", gap: 6 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {chipBtn(filter === "all", () => setFilter("all"), "All")}
             {chipBtn(filter === "active", () => setFilter("active"), "Active")}
             {chipBtn(filter === "completed", () => setFilter("completed"), "Completed")}
           </div>
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {chipBtn(sort === "created", () => setSort("created"), "Newest")}
             {chipBtn(sort === "updated", () => setSort("updated"), "Recently updated")}
             {chipBtn(sort === "due", () => setSort("due"), "Due date")}
           </div>
         </div>
 
-        {error && <p style={{ margin: "0 0 12px", fontSize: 12, color: "#e53e3e" }}>{error}</p>}
+        {error && <p style={{ margin: "0 0 14px", fontSize: 14, color: "#e53e3e" }}>{error}</p>}
 
         {/* Todo list */}
         <div style={{ display: "flex", flexDirection: "column", gap: 1, border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
           {filtered.length === 0 ? (
-            <div style={{ padding: "24px", textAlign: "center", color: muted, fontSize: 13, background: paper }}>
+            <div style={{ padding: "32px", textAlign: "center", color: muted, fontSize: 14, background: paper }}>
               {filter === "completed" ? "No completed todos yet." : filter === "active" ? "No active todos. All done!" : "No todos yet. Add one above."}
             </div>
           ) : filtered.map((todo, i) => {
             const overdue = todo.dueDate && isOverdue(todo.dueDate, todo.completed);
             return (
               <div key={todo.id}
-                style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", background: paper, borderBottom: i < filtered.length - 1 ? `1px solid ${border}` : "none", transition: "background 0.15s" }}
+                style={{ display: "flex", alignItems: "flex-start", gap: 14, padding: "18px 20px", background: paper, borderBottom: i < filtered.length - 1 ? `1px solid ${border}` : "none", transition: "background 0.15s" }}
                 onMouseEnter={e => (e.currentTarget.style.background = bg)}
                 onMouseLeave={e => (e.currentTarget.style.background = paper)}
               >
                 {/* Checkbox */}
                 <button onClick={() => handleToggle(todo)} style={{
-                  width: 18, height: 18, borderRadius: "50%", flexShrink: 0, marginTop: 2,
+                  width: 22, height: 22, borderRadius: "50%", flexShrink: 0, marginTop: 2,
                   border: `1.5px solid ${todo.completed ? accent : border}`,
                   background: todo.completed ? accent : "transparent",
                   cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.15s", padding: 0,
                 }}>
                   {todo.completed && (
-                    <svg width="9" height="9" viewBox="0 0 8 8" fill="none">
+                    <svg width="11" height="11" viewBox="0 0 8 8" fill="none">
                       <path d="M1.5 4L3 5.5L6.5 2" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
@@ -257,31 +257,31 @@ export default function DashboardPage() {
                 {/* Content */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   {editingId === todo.id ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       <input ref={editInputRef} value={editingTitle} onChange={e => setEditingTitle(e.target.value)}
                         onKeyDown={e => { if (e.key === "Enter") handleEditSave(todo.id); if (e.key === "Escape") setEditingId(null); }}
-                        style={{ ...inputStyle, padding: "4px 8px", fontSize: 13 }}
+                        style={{ ...inputStyle, padding: "6px 10px", fontSize: 15 }}
                         onFocus={e => e.currentTarget.style.borderColor = accent}
                         onBlur={e => e.currentTarget.style.borderColor = border}
                       />
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <DatePicker value={editingDueDate} onChange={setEditingDueDate} placeholder="Set due date" />
-                        <button onClick={() => handleEditSave(todo.id)} style={{ fontSize: 12, color: accent, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>Save</button>
-                        <button onClick={() => setEditingId(null)} style={{ fontSize: 12, color: muted, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>Cancel</button>
+                        <button onClick={() => handleEditSave(todo.id)} style={{ fontSize: 13, color: accent, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>Save</button>
+                        <button onClick={() => setEditingId(null)} style={{ fontSize: 13, color: muted, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>Cancel</button>
                       </div>
                     </div>
                   ) : (
                     <>
-                      <span style={{ fontSize: 13, color: todo.completed ? muted : text, textDecoration: todo.completed ? "line-through" : "none", wordBreak: "break-word" }}
+                      <span style={{ fontSize: 15, color: todo.completed ? muted : text, textDecoration: todo.completed ? "line-through" : "none", wordBreak: "break-word" }}
                         onDoubleClick={() => { setEditingId(todo.id); setEditingTitle(todo.title); setEditingDueDate(todo.dueDate ? todo.dueDate.slice(0, 10) : ""); }}
                         title="Double-click to edit"
                       >{todo.title}</span>
                       {todo.dueDate && (
-                        <p style={{ margin: "3px 0 0", fontSize: 11, color: overdue ? "#e53e3e" : muted }}>
+                        <p style={{ margin: "4px 0 0", fontSize: 12, color: overdue ? "#e53e3e" : muted }}>
                           {overdue ? "Overdue · " : ""}{formatDate(todo.dueDate)}
                         </p>
                       )}
-                      <p style={{ margin: "3px 0 0", fontSize: 11, color: muted }}>
+                      <p style={{ margin: "4px 0 0", fontSize: 12, color: muted }}>
                         Created {formatDateTime(todo.createdAt)}
                         {todo.updatedAt !== todo.createdAt && ` · Updated ${formatDateTime(todo.updatedAt)}`}
                       </p>
@@ -293,13 +293,13 @@ export default function DashboardPage() {
                 {editingId !== todo.id && (
                   <div style={{ display: "flex", gap: 2, flexShrink: 0 }}>
                     {iconBtn(() => { setEditingId(todo.id); setEditingTitle(todo.title); setEditingDueDate(todo.dueDate ? todo.dueDate.slice(0, 10) : ""); }, "Edit", text,
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                       </svg>
                     )}
                     {iconBtn(() => handleDelete(todo.id), "Delete", "#e53e3e",
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="3 6 5 6 21 6" />
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                         <path d="M10 11v6M14 11v6" />
@@ -314,7 +314,7 @@ export default function DashboardPage() {
         </div>
 
         {todos.length > 0 && (
-          <p style={{ margin: "12px 0 0", fontSize: 12, color: muted, textAlign: "right" }}>
+          <p style={{ margin: "14px 0 0", fontSize: 13, color: muted, textAlign: "right" }}>
             {todos.filter(t => t.completed).length} of {todos.length} completed
           </p>
         )}
