@@ -1,5 +1,5 @@
-import prisma from "../config/prisma";
-import { TodoModel } from "../generated/models";
+import prisma from "@/config/prisma";
+import { TodoModel } from "@/generated/models";
 
 export const findTodosByUserId = async (userId: string): Promise<TodoModel[]> =>
   prisma.todo.findMany({

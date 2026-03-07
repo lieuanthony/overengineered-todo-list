@@ -6,8 +6,9 @@ const config: Config = {
   roots: ["<rootDir>/test"],
   moduleNameMapper: {
   "^@/config/prisma$": "<rootDir>/src/config/__mocks__/prisma.ts",
+  "^../config/prisma$": "<rootDir>/src/config/__mocks__/prisma.ts",
   "^@/(.*)$": "<rootDir>/src/$1",
-  },
+},
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   clearMocks: true,
   collectCoverageFrom: [

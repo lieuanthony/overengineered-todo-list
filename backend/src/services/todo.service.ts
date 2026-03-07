@@ -4,7 +4,7 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
-} from "../models/todo.model";
+} from "@/models/todo.model";
 
 export const getTodos = (userId: string) => findTodosByUserId(userId);
 

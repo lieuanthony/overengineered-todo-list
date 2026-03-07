@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerUser, loginUser, generateTokens } from "../services/auth.service";
+import { registerUser, loginUser, generateTokens } from "@/services/auth.service";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "../middleware/auth.middleware";
 

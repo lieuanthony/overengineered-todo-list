@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getAll, create, update, remove } from "../controllers/todo.controller";
-import { authenticateToken } from "../middleware/auth.middleware";
+import { getAll, create, update, remove } from "@/controllers/todo.controller";
+import { authenticateToken } from "@/middleware/auth.middleware";
 
 const router = Router();
 
