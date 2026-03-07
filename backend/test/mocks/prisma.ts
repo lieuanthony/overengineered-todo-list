@@ -1,13 +1,8 @@
-// Reusable Prisma mock — import this in any test that touches the DB
 import { PrismaClient } from "@/generated/client";
-import { mockDeep, mockReset, DeepMockProxy } from "jest-mock-extended";
-
-jest.mock("@/config/prisma", () => ({
-  __esModule: true,
-  default: mockDeep<PrismaClient>(),
-}));
-
+import { mockReset, DeepMockProxy } from "jest-mock-extended";
 import prisma from "@/config/prisma";
+
+jest.mock("@/config/prisma");
 
 beforeEach(() => {
   mockReset(prismaMock);
