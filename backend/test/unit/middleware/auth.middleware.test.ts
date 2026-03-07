@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { authenticateToken, authenticateRefreshToken } from "../../../src/middleware/auth.middleware";
+import { authenticateToken, authenticateRefreshToken } from "@/middleware/auth.middleware";
 
 const mockReq = (overrides = {}) => ({ headers: {}, cookies: {}, ...overrides } as unknown as Request);
 const mockRes = () => {

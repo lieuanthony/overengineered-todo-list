@@ -1,7 +1,7 @@
 import "../../mocks/prisma";
 import { prismaMock } from "../../mocks/prisma";
 import bcrypt from "bcrypt";
-import { registerUser, loginUser } from "../../../src/services/auth.service";
+import { registerUser, loginUser } from "@/services/auth.service";
 
 const mockUser = {
   id: "user-123",

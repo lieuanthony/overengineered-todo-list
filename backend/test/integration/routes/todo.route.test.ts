@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../../../src/app";
+import app from "@/app";
 import "../../mocks/prisma";
 import { prismaMock } from "../../mocks/prisma";
 import jwt from "jsonwebtoken";

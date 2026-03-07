@@ -1,6 +1,6 @@
 import "../../mocks/prisma";
 import { prismaMock } from "../../mocks/prisma";
-import { getTodos, addTodo, editTodo, removeTodo } from "../../../src/services/todo.service";
+import { getTodos, addTodo, editTodo, removeTodo } from "@/services/todo.service";
 
 const mockTodo = {
   id: "todo-123",
