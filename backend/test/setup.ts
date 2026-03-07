@@ -13,4 +13,3 @@ afterEach(() => {
 
 // Suppress console.error in tests unless explicitly needed
 // (keeps output clean; remove if you want to see service-level error logs)
-jest.spyOn(console, "error").mockImplementation(() => {});
