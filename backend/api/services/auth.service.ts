@@ -26,16 +26,19 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const generateTokens = (userId: string, email: string) => {
+  const accessExpiry = (process.env.JWT_EXPIRES_IN || "15m") as string;
+  const refreshExpiry = (process.env.JWT_REFRESH_EXPIRES_IN || "7d") as string;
+
   const accessToken = jwt.sign(
     { userId, email },
     process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRES_IN || "15m")as SignOptions["expiresIn"] }
+    { expiresIn: accessExpiry as unknown as number }
   );
 
   const refreshToken = jwt.sign(
     { userId, email },
     process.env.JWT_REFRESH_SECRET!,
-    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d" }
+    { expiresIn: refreshExpiry as unknown as number }
   );
 
   return { accessToken, refreshToken };
