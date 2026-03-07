@@ -20,6 +20,6 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes)
-app.use("/api/todo", todoRoutes)
+app.use("/api/todos", todoRoutes)
 
 export default app;
