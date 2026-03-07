@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route";
+import todoRoutes from "./routes/todo.route"
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes)
+app.use("/api/todo", todoRoutes)
 
 export default app;
