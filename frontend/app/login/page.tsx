@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const bg = theme.palette.background.default;
   const paper = theme.palette.background.paper;
@@ -37,6 +38,10 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!email || !password) { setError("Please fill in all fields"); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Please enter a valid email address"); return; }
+
     setLoading(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
@@ -74,14 +79,36 @@ export default function LoginPage() {
           </div>
 
           <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 4, padding: "32px 28px" }}>
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="you@example.com" required style={inputStyle} />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="you@example.com" style={inputStyle} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: muted, fontFamily: "system-ui, sans-serif" }}>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="••••••••" required style={inputStyle} />
+                <div style={{ position: "relative" }}>
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} onFocus={onFocus} onBlur={onBlur} placeholder="••••••••" style={{ ...inputStyle, paddingRight: 44 }} />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(v => !v)}
+                    style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: muted, padding: 2, display: "flex", alignItems: "center", transition: "color 0.15s" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = text)}
+                    onMouseLeave={e => (e.currentTarget.style.color = muted)}
+                  >
+                    {showPassword ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
 
               {error && (
@@ -90,7 +117,7 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 4, padding: "12px", fontSize: 13, fontWeight: 600, color: "#FFFFFF", background: loading ? muted : ACCENT, border: "none", borderRadius: 4, cursor: loading ? "not-allowed" : "pointer", fontFamily: "system-ui, sans-serif", letterSpacing: "0.02em" }}>
+              <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 4, padding: "12px", fontSize: 13, fontWeight: 600, color: "#FFFFFF", background: loading ? muted : ACCENT, border: "none", borderRadius: 4, cursor: loading ? "not-allowed" : "pointer", fontFamily: "system-ui, sans-serif", letterSpacing: "0.02em", width: "100%" }}>
                 {loading ? "Signing in..." : "Sign in →"}
               </button>
             </form>
