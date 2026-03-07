@@ -51,20 +51,20 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
           mode: resolvedMode,
           ...(resolvedMode === "light"
             ? {
-                primary: { main: "#111111" },
+                primary: { main: "#1e3a5f" },
                 background: { default: "#FAFAFA", paper: "#FFFFFF" },
                 text: { primary: "#111111", secondary: "#666666" },
                 divider: "#E8E8E8",
               }
             : {
-                primary: { main: "#EEEEEE" },
+                primary: { main: "#4a7ab5" },
                 background: { default: "#0A0A0A", paper: "#161616" },
                 text: { primary: "#EEEEEE", secondary: "#888888" },
                 divider: "#2A2A2A",
               }),
         },
         typography: {
-          fontFamily: "'Inter', 'system-ui', sans-serif",
+          fontFamily: "'JetBrains Mono', monospace",
         },
         shape: { borderRadius: 8 },
         components: {
