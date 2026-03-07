@@ -55,7 +55,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main style={{ minHeight: "calc(100vh - 120px)", display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", padding: "0 20px" }}>
+    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", padding: "0 20px" }}>
       <div style={{ width: "100%", maxWidth: 360 }}>
         <div style={{ marginBottom: 20 }}>
           <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 18 }}>Sign in</p>

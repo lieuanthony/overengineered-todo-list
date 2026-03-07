@@ -12,7 +12,7 @@ export default function Home() {
   const accent = theme.palette.primary.main;
 
   return (
-    <main style={{ minHeight: "calc(100vh - 120px)", display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit" }}>
+    <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: bg, color: text, fontFamily: "inherit", overflow: "hidden" }}>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", padding: "0 20px" }}>
         <p style={{ margin: 0, fontWeight: 600, fontSize: 18 }}>Hi, welcome to <span style={{ color: accent }}>todo</span>.</p>
         <p style={{ margin: 0, maxWidth: 480, color: muted, fontSize: 14, lineHeight: 1.7 }}>
