@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "@/app";
+import app from "../../../src/app";
 import "../../mocks/prisma";
 import { prismaMock } from "../../mocks/prisma";
 import bcrypt from "bcrypt";
@@ -40,7 +40,7 @@ describe("POST /api/auth/register", () => {
     });
 
     expect(res.headers["set-cookie"]).toBeDefined();
-    expect(res.headers["set-cookie"][0]).toMatch(/refreshToken/);
+    expect(res.headers["set-cookie"]?.[0]).toMatch(/refreshToken/);
   });
 
   it("returns 409 when email already exists", async () => {
@@ -84,7 +84,7 @@ describe("POST /api/auth/login", () => {
       password: "Password1!",
     });
 
-    expect(res.headers["set-cookie"][0]).toMatch(/refreshToken/);
+    expect(res.headers["set-cookie"]?.[0]).toMatch(/refreshToken/);
   });
 
   it("returns 401 on wrong password", async () => {
@@ -142,6 +142,6 @@ describe("POST /api/auth/logout", () => {
     const res = await request(app).post("/api/auth/logout");
 
     expect(res.status).toBe(200);
-    expect(res.headers["set-cookie"][0]).toMatch(/refreshToken=;|refreshToken=(?:;|$)/);
+    expect(res.headers["set-cookie"]?.[0]).toMatch(/refreshToken=;|refreshToken=(?:;|$)/);
   });
 });

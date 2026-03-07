@@ -17,7 +17,7 @@ describe("registerUser", () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
     prismaMock.user.create.mockResolvedValue(mockUser);
 
-    const result = await registerUser({ email: "test@example.com", name: "Test User", password: "Password1!" });
+    const result = await registerUser("test@example.com", "Test User", "Password1!");
 
     expect(prismaMock.user.create).toHaveBeenCalled();
     expect(result).toHaveProperty("accessToken");
@@ -28,7 +28,7 @@ describe("registerUser", () => {
     prismaMock.user.findUnique.mockResolvedValue(mockUser);
 
     await expect(
-      registerUser({ email: "test@example.com", name: "Test", password: "Password1!" })
+      registerUser("test@example.com", "Test", "Password1!")
     ).rejects.toThrow();
   });
 
@@ -36,10 +36,10 @@ describe("registerUser", () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
     prismaMock.user.create.mockResolvedValue(mockUser);
 
-    await registerUser({ email: "test@example.com", name: "Test User", password: "Password1!" });
+    await registerUser("test@example.com", "Test User", "Password1!");
 
-    const createCall = prismaMock.user.create.mock.calls[0][0];
-    expect(createCall.data.password).not.toBe("Password1!");
+    const createCall = prismaMock.user.create.mock.calls[0]?.[0];
+    expect(createCall?.data.password).not.toBe("Password1!");
   });
 });
 
@@ -48,7 +48,7 @@ describe("loginUser", () => {
     const hashed = await bcrypt.hash("Password1!", 10);
     prismaMock.user.findUnique.mockResolvedValue({ ...mockUser, password: hashed });
 
-    const result = await loginUser({ email: "test@example.com", password: "Password1!" });
+    const result = await loginUser("test@example.com", "Password1!");
 
     expect(result).toHaveProperty("accessToken");
     expect(result).toHaveProperty("refreshToken");
@@ -59,7 +59,7 @@ describe("loginUser", () => {
     prismaMock.user.findUnique.mockResolvedValue({ ...mockUser, password: hashed });
 
     await expect(
-      loginUser({ email: "test@example.com", password: "wrongpassword" })
+      loginUser("test@example.com", "wrongpassword")
     ).rejects.toThrow();
   });
 
@@ -67,7 +67,7 @@ describe("loginUser", () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 
     await expect(
-      loginUser({ email: "nobody@example.com", password: "Password1!" })
+      loginUser("nobody@example.com", "Password1!")
     ).rejects.toThrow();
   });
 });
