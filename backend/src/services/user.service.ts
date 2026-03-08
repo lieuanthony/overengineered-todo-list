@@ -1,4 +1,4 @@
-import { findUserWithTodos } from "@/models/user.model";
+import { findUserWithTodos, updateUserById } from "@/models/user.model";
 
 export const getUserProfile = async (userId: string) => {
   const user = await findUserWithTodos(userId);
@@ -52,4 +52,12 @@ const calcStreak = (heatmap: Record<string, number>): number => {
   }
 
   return streak;
+};
+
+export const updateUser = async (userId: string, data: { name?: string }) => {
+  if (data.name !== undefined) {
+    if (!data.name.trim()) throw new Error("Name cannot be empty");
+    data.name = data.name.trim();
+  }
+  return updateUserById(userId, data);
 };

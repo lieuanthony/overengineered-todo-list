@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -15,7 +15,6 @@ export default function Navbar() {
   const { setMode, resolvedMode } = useThemeMode();
   const { logout, ready, accessToken } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
 
   const text = theme.palette.text.primary;
   const muted = theme.palette.text.secondary;
@@ -27,7 +26,6 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -46,6 +44,10 @@ export default function Navbar() {
     window.location.href = "/";
   };
 
+  const dropdownItem = (content: React.ReactNode) => ({
+    base: { display: "block", padding: "10px 16px", fontSize: 13, background: "none" as const, width: "100%" },
+  });
+
   return (
     <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 48px", borderBottom: `1px solid ${border}`, background: bg }}>
       {pathname === "/dashboard"
@@ -58,24 +60,13 @@ export default function Navbar() {
         </IconButton>
 
         {isAuthed && (
-          <>
-          <Link
-            href="/stats"
-            style={{ fontSize: 13, color: pathname === "/stats" ? text : muted, textDecoration: "none", fontFamily: "inherit" }}
-            onMouseEnter={e => e.currentTarget.style.color = text}
-            onMouseLeave={e => e.currentTarget.style.color = pathname === "/stats" ? text : muted}
-          >
-            Stats
-          </Link>
           <div ref={dropdownRef} style={{ position: "relative" }}>
-            {/* Avatar button */}
             <button
               onClick={() => setDropdownOpen(o => !o)}
               style={{
                 width: 32, height: 32, borderRadius: "50%", background: accent,
                 border: "none", cursor: "pointer", display: "flex", alignItems: "center",
-                justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 13,
-                fontFamily: "inherit",
+                justifyContent: "center", color: "#fff",
               }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -84,7 +75,6 @@ export default function Navbar() {
               </svg>
             </button>
 
-            {/* Dropdown */}
             {dropdownOpen && (
               <div style={{
                 position: "absolute", top: "calc(100% + 8px)", right: 0,
@@ -92,15 +82,21 @@ export default function Navbar() {
                 minWidth: 160, boxShadow: "0 4px 16px rgba(0,0,0,0.12)", zIndex: 100,
                 overflow: "hidden",
               }}>
-                <Link
-                  href="/profile"
-                  onClick={() => setDropdownOpen(false)}
-                  style={{ display: "block", padding: "10px 16px", fontSize: 13, color: text, textDecoration: "none" }}
-                  onMouseEnter={e => e.currentTarget.style.background = bg}
-                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                >
-                  Edit profile
-                </Link>
+                {[
+                  { href: "/stats", label: "Stats" },
+                  { href: "/profile", label: "Edit profile" },
+                ].map(({ href, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setDropdownOpen(false)}
+                    style={{ display: "block", padding: "10px 16px", fontSize: 13, color: text, textDecoration: "none" }}
+                    onMouseEnter={e => e.currentTarget.style.background = bg}
+                    onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                  >
+                    {label}
+                  </Link>
+                ))}
                 <div style={{ height: 1, background: border }} />
                 <button
                   onClick={handleLogout}
@@ -117,7 +113,6 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          </>
         )}
       </div>
     </nav>

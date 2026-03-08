@@ -191,7 +191,7 @@ export default function DashboardPage() {
 
   return (
     <main style={{ flex: 1, background: bg, color: text, fontFamily: "inherit", padding: "48px 32px", display: "flex", justifyContent: "center", overflowY: "auto" }}>
-      <div style={{ width: "100%", maxWidth: 1100, display: "flex", gap: 32, alignItems: "flex-start" }}>
+      <div style={{ width: "100%", maxWidth: 720, display: "flex", gap: 32, alignItems: "flex-start" }}>
 
         {/* ── Todos column ── */}
         <div style={{ flex: 1, minWidth: 0 }}>

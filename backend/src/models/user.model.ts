@@ -15,3 +15,6 @@ export const findUserWithTodos = async (id: string) =>
       },
     },
   });
+
+export const updateUserById = async (id: string, data: { name?: string }) =>
+  prisma.user.update({ where: { id }, data });

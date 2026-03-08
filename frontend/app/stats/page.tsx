@@ -91,7 +91,7 @@ export default function StatsPage() {
 
         {/* Heatmap */}
         <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 12, padding: "20px 24px" }}>
-          <Heatmap data={profile?.heatmap ?? {}} accent={accent} border={border} muted={muted} bg={bg} />
+          <Heatmap data={profile?.heatmap ?? {}} accent={accent} border={border} muted={muted} bg={bg} joinYear={profile ? new Date(profile.createdAt).getFullYear() : new Date().getFullYear()} />
         </div>
 
       </div>

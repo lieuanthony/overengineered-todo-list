@@ -2,9 +2,12 @@
 
 import { useState, useRef, useEffect } from "react";
 
-export default function Heatmap({ data, accent, border, muted }: { data: Record<string, number>; accent: string; border: string; muted: string; bg: string }) {
+export default function Heatmap({ data, accent, border, muted, joinYear }: { data: Record<string, number>; accent: string; border: string; muted: string; bg: string; joinYear: number }) {
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 3 }, (_, i) => currentYear - i);
+  const years = Array.from(
+    { length: currentYear - joinYear + 1 },
+    (_, i) => currentYear - i
+  );
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [tooltip, setTooltip] = useState<{ date: string; count: number; cx: number; cy: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,7 +16,6 @@ export default function Heatmap({ data, accent, border, muted }: { data: Record<
   const DAYS = 7;
   const GAP = 2;
 
-  // Build grid — no weekday padding, Jan 1 → Dec 31
   const cells: { date: string; count: number }[] = [];
   const startDate = new Date(selectedYear, 0, 1);
   const endDate = new Date(selectedYear, 11, 31);
@@ -27,12 +29,10 @@ export default function Heatmap({ data, accent, border, muted }: { data: Record<
   const columns: { date: string; count: number }[][] = [];
   for (let w = 0; w < WEEKS; w++) columns.push(cells.slice(w * DAYS, w * DAYS + DAYS));
 
-  // Compute cell size to exactly fit the container
   useEffect(() => {
     if (!containerRef.current) return;
     const observer = new ResizeObserver(entries => {
       const width = entries[0].contentRect.width;
-      // width = WEEKS * cell + (WEEKS - 1) * gap → cell = (width - (WEEKS-1)*gap) / WEEKS
       const computed = Math.floor((width - (WEEKS - 1) * GAP) / WEEKS);
       setCellSize(Math.max(4, computed));
     });
@@ -43,13 +43,11 @@ export default function Heatmap({ data, accent, border, muted }: { data: Record<
   const max = Math.max(1, ...Object.values(data).filter(Boolean));
   const getColor = (count: number) => {
     if (count <= 0) return border;
-    // More completions = more opaque (solid), fewer = more transparent
-    const intensity = count / max; // 0..1
+    const intensity = count / max;
     const alpha = Math.round((0.2 + intensity * 0.8) * 255).toString(16).padStart(2, "0");
     return accent + alpha;
   };
 
-  // Month labels
   const monthLabels: { label: string; col: number }[] = [];
   let lastMonth = -1;
   columns.forEach((week, wi) => {
@@ -65,7 +63,6 @@ export default function Heatmap({ data, accent, border, muted }: { data: Record<
 
   return (
     <div>
-      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
         <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: muted, textTransform: "uppercase", letterSpacing: "0.05em" }}>Activity</p>
         <select
@@ -78,7 +75,6 @@ export default function Heatmap({ data, accent, border, muted }: { data: Record<
       </div>
 
       <div ref={containerRef}>
-        {/* Month labels */}
         <div style={{ display: "flex", gap: GAP, marginBottom: 4 }}>
           {columns.map((_, wi) => {
             const lbl = monthLabels.find(m => m.col === wi);
@@ -90,7 +86,6 @@ export default function Heatmap({ data, accent, border, muted }: { data: Record<
           })}
         </div>
 
-        {/* Grid */}
         <div style={{ display: "flex", gap: GAP }}>
           {columns.map((week, wi) => (
             <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
