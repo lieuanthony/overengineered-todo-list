@@ -6,9 +6,9 @@
     "schema": "prisma/schema.prisma"
   },
   "scripts": {
-    "dev": "npx prisma migrate dev --name auto && npx prisma generate && tsx watch server.ts",
+    "dev": "tsx watch server.ts",
     "build": "tsc",
-    "resetdb": "npx prisma migrate reset",
+    "resetdb": "npx prisma migrate reset && npx prisma migrate dev --name auto && npx prisma generate",
     "lint": "eslint 'src/**/*.{ts,js}'",
     "lint:fix": "eslint 'src/**/*.{ts,js}' --fix",
     "format": "npx prettier --config ../.prettierrc --write 'src/**/*.{ts,js,json,md}' && npx prisma format",
