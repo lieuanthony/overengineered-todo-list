@@ -1,11 +1,11 @@
-import { findUserWithTodos, updateUserById } from "@/models/user.model";
+import { findUserWithTodos, updateUserById } from '@/models/user.model';
 
 export const getUserProfile = async (userId: string) => {
   const user = await findUserWithTodos(userId);
-  if (!user) throw new Error("User not found");
+  if (!user) throw new Error('User not found');
 
   const total = user.todos.length;
-  const completedTodos = user.todos.filter(t => t.completed);
+  const completedTodos = user.todos.filter((t) => t.completed);
   const completionRate = total === 0 ? 0 : Math.round((completedTodos.length / total) * 100);
 
   // Build heatmap data: { "YYYY-MM-DD": count }
@@ -56,7 +56,7 @@ const calcStreak = (heatmap: Record<string, number>): number => {
 
 export const updateUser = async (userId: string, data: { name?: string }) => {
   if (data.name !== undefined) {
-    if (!data.name.trim()) throw new Error("Name cannot be empty");
+    if (!data.name.trim()) throw new Error('Name cannot be empty');
     data.name = data.name.trim();
   }
   return updateUserById(userId, data);

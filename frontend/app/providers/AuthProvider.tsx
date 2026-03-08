@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -29,8 +29,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const refresh = useCallback(async (): Promise<string | null> => {
     try {
       const res = await fetch(`${API}/api/auth/refresh`, {
-        method: "POST",
-        credentials: "include",
+        method: 'POST',
+        credentials: 'include',
       });
       if (!res.ok) {
         setAccessToken(null);
@@ -47,8 +47,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const logout = useCallback(async () => {
     try {
       await fetch(`${API}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
+        method: 'POST',
+        credentials: 'include',
       });
     } finally {
       setAccessToken(null);

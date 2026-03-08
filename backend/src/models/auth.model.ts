@@ -1,5 +1,5 @@
-import prisma from "@/config/prisma";
-import { UserModel } from "@/generated/models";
+import prisma from '@/config/prisma';
+import { UserModel } from '@/generated/models';
 
 export const findUserByEmail = async (email: string): Promise<UserModel | null> => {
   return prisma.user.findUnique({

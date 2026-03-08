@@ -1,13 +1,13 @@
-import path from "path";
-import dotenv from "dotenv";
+import path from 'path';
+import dotenv from 'dotenv';
 dotenv.config({
-  path: path.resolve(__dirname, "../../.env"),
+  path: path.resolve(__dirname, '../../.env'),
 });
-import { PrismaClient } from "@/generated/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from '@/generated/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const adapter = new PrismaPg({ 
-  connectionString: process.env.DATABASE_URL! 
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
 });
 
 const prisma = new PrismaClient({ adapter });
