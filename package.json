@@ -2,16 +2,13 @@
   "name": "overengineered-todo-list",
   "version": "1.0.0",
   "private": true,
+  "workspaces": ["backend", "frontend"],
   "scripts": {
-    "dev": "docker compose up -d && concurrently --kill-others-on-fail \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "format:backend": "cd backend && npm run format",
-    "format:frontend": "cd frontend && npm run format",
-    "format:all": "npm run format:backend && npm run format:frontend",
+    "dev": "docker compose up -d && concurrently --kill-others-on-fail \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "format:all": "npm run format --workspace=backend && npm run format --workspace=frontend",
     "test:all": "npm run test --workspace=backend",
-    "stop": "docker compose down && lsof -ti :3000 | xargs kill; lsof -ti :3000 | xargs kill; lsof -ti :5001 | xargs kill"  
-},
+    "stop": "docker compose down"
+  },
   "devDependencies": {
     "concurrently": "^9.0.0",
     "prettier": "^3.8.1"
