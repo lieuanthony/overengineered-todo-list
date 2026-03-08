@@ -52,6 +52,7 @@ export default function DashboardPage() {
   const theme = useTheme();
   const { accessToken, refresh, logout, ready } = useAuth();
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [userName, setUserName] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("created");
   const [newTitle, setNewTitle] = useState("");
@@ -76,6 +77,7 @@ export default function DashboardPage() {
     if (!ready) return;
     if (!accessToken) { router.push("/login"); return; }
     fetchTodos();
+    fetchUserName();
   }, [ready, accessToken]);
 
   useEffect(() => {
@@ -94,6 +96,15 @@ export default function DashboardPage() {
     }
   };
 
+  const fetchUserName = async () => {
+    try {
+      const res = await fetch(`${API}/api/users/me`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setUserName(data.name);
+      }
+    } catch { /* non-critical */ }
+  };
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -196,8 +207,6 @@ export default function DashboardPage() {
         {/* ── Todos column ── */}
         <div style={{ flex: 1, minWidth: 0 }}>
 
-
-
         {/* Header */}
         <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 24 }}>
 
@@ -211,22 +220,15 @@ export default function DashboardPage() {
             return (
               <div style={{ position: "relative", flexShrink: 0, width: size, height: size }}>
                 <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-                  {/* Track */}
                   <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={border} strokeWidth={strokeWidth} />
-                  {/* Progress */}
                   <circle
                     cx={size / 2} cy={size / 2} r={radius}
-                    fill="none"
-                    stroke={accent}
-                    strokeWidth={strokeWidth}
-                    strokeLinecap="round"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
+                    fill="none" stroke={accent} strokeWidth={strokeWidth} strokeLinecap="round"
+                    strokeDasharray={circumference} strokeDashoffset={offset}
                     style={{ transition: "stroke-dashoffset 0.4s ease, stroke 0.4s ease", opacity: allDone ? 1 : 0.8 }}
                   />
                 </svg>
-                {/* Center label */}
-                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span style={{ fontSize: 16, fontWeight: 700, color: allDone ? accent : text, lineHeight: 1, fontFamily: "inherit" }}>{pct}%</span>
                 </div>
               </div>
@@ -236,7 +238,9 @@ export default function DashboardPage() {
           <div style={{ flex: 1 }}>
             <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 22 }}>My todos</p>
             <p style={{ margin: 0, fontSize: 14, color: allDone ? accent : muted, fontWeight: allDone ? 600 : 400, transition: "color 0.3s" }}>
-              {allDone ? "All done! Great work 🎉" : `${todos.filter(t => !t.completed).length} remaining`}
+              {allDone
+                ? `Great work${userName ? `, ${userName.split(" ")[0]}` : ""}!`
+                : `${todos.filter(t => !t.completed).length} remaining`}
             </p>
             {total > 0 && !allDone && (
               <p style={{ margin: "2px 0 0", fontSize: 12, color: muted }}>{completed} of {total} completed</p>
@@ -364,8 +368,6 @@ export default function DashboardPage() {
         </div>{/* end todo list */}
 
         </div>{/* end todos column */}
-
-
 
       </div>
     </main>
