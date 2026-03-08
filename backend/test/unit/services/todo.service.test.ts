@@ -1,4 +1,3 @@
-import "../../mocks/prisma";
 import { prismaMock } from "../../mocks/prisma";
 import { getTodos, addTodo, editTodo, removeTodo } from "@/services/todo.service";
 
@@ -6,6 +5,7 @@ const mockTodo = {
   id: "todo-123",
   title: "Test todo",
   completed: false,
+  completedAt: null,
   dueDate: null,
   userId: "user-123",
   createdAt: new Date(),
@@ -80,13 +80,30 @@ describe("editTodo", () => {
     await expect(editTodo("todo-123", "user-123", { title: "" })).rejects.toThrow("Title cannot be empty");
   });
 
-  it("toggles completed status", async () => {
-    const updated = { ...mockTodo, completed: true };
+  it("sets completedAt when marking complete", async () => {
+    const updated = { ...mockTodo, completed: true, completedAt: new Date() };
     prismaMock.todo.findFirst.mockResolvedValue(mockTodo);
     prismaMock.todo.update.mockResolvedValue(updated);
 
     const result = await editTodo("todo-123", "user-123", { completed: true });
     expect(result.completed).toBe(true);
+    expect(result.completedAt).not.toBeNull();
+    expect(prismaMock.todo.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ completedAt: expect.any(Date) }) })
+    );
+  });
+
+  it("clears completedAt when marking incomplete", async () => {
+    const updated = { ...mockTodo, completed: false, completedAt: null };
+    prismaMock.todo.findFirst.mockResolvedValue({ ...mockTodo, completed: true, completedAt: new Date() });
+    prismaMock.todo.update.mockResolvedValue(updated);
+
+    const result = await editTodo("todo-123", "user-123", { completed: false });
+    expect(result.completed).toBe(false);
+    expect(result.completedAt).toBeNull();
+    expect(prismaMock.todo.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ completedAt: null }) })
+    );
   });
 
   it("clears due date when null is passed", async () => {

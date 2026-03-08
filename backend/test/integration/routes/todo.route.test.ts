@@ -1,6 +1,5 @@
 import request from "supertest";
 import app from "@/app";
-import "../../mocks/prisma";
 import { prismaMock } from "../../mocks/prisma";
 import jwt from "jsonwebtoken";
 
@@ -8,6 +7,7 @@ const mockTodo = {
   id: "todo-123",
   title: "Test todo",
   completed: false,
+  completedAt: null,
   dueDate: null,
   userId: "user-123",
   createdAt: new Date(),
@@ -123,8 +123,8 @@ describe("PUT /api/todos/:id", () => {
     expect(res.body.title).toBe("Updated title");
   });
 
-  it("toggles completed status", async () => {
-    const updated = { ...mockTodo, completed: true };
+  it("sets completedAt when marking complete", async () => {
+    const updated = { ...mockTodo, completed: true, completedAt: new Date() };
     prismaMock.todo.findFirst.mockResolvedValue(mockTodo);
     prismaMock.todo.update.mockResolvedValue(updated);
 
@@ -135,6 +135,21 @@ describe("PUT /api/todos/:id", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.completed).toBe(true);
+    expect(res.body.completedAt).not.toBeNull();
+  });
+
+  it("clears completedAt when marking incomplete", async () => {
+    const updated = { ...mockTodo, completed: false, completedAt: null };
+    prismaMock.todo.findFirst.mockResolvedValue({ ...mockTodo, completed: true, completedAt: new Date() });
+    prismaMock.todo.update.mockResolvedValue(updated);
+
+    const res = await request(app)
+      .put("/api/todos/todo-123")
+      .set(authHeader(makeToken()))
+      .send({ completed: false });
+
+    expect(res.status).toBe(200);
+    expect(res.body.completedAt).toBeNull();
   });
 
   it("returns 404 when todo does not exist", async () => {
