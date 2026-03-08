@@ -38,7 +38,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const isAuthed = pathname === "/dashboard" || pathname === "/profile";
+  const isAuthed = pathname === "/dashboard" || pathname === "/profile" || pathname === "/stats";
 
   const handleLogout = async () => {
     setDropdownOpen(false);
@@ -58,6 +58,15 @@ export default function Navbar() {
         </IconButton>
 
         {isAuthed && (
+          <>
+          <Link
+            href="/stats"
+            style={{ fontSize: 13, color: pathname === "/stats" ? text : muted, textDecoration: "none", fontFamily: "inherit" }}
+            onMouseEnter={e => e.currentTarget.style.color = text}
+            onMouseLeave={e => e.currentTarget.style.color = pathname === "/stats" ? text : muted}
+          >
+            Stats
+          </Link>
           <div ref={dropdownRef} style={{ position: "relative" }}>
             {/* Avatar button */}
             <button
@@ -108,6 +117,7 @@ export default function Navbar() {
               </div>
             )}
           </div>
+          </>
         )}
       </div>
     </nav>

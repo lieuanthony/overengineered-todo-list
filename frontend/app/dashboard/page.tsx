@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
+import Link from "next/link";
 import DatePicker from "../components/DatePicker";
-import Heatmap from "../components/Heatmap";
 import { useAuth } from "../providers/AuthProvider";
 
 type Todo = {
@@ -14,19 +14,6 @@ type Todo = {
   dueDate: string | null;
   createdAt: string;
   updatedAt: string;
-};
-
-type Profile = {
-  name: string;
-  email: string;
-  createdAt: string;
-  stats: {
-    total: number;
-    completed: number;
-    completionRate: number;
-    streak: number;
-  };
-  heatmap: Record<string, number>;
 };
 
 type Filter = "all" | "active" | "completed";
@@ -65,7 +52,6 @@ export default function DashboardPage() {
   const theme = useTheme();
   const { accessToken, refresh, logout, ready } = useAuth();
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("created");
   const [newTitle, setNewTitle] = useState("");
@@ -90,7 +76,6 @@ export default function DashboardPage() {
     if (!ready) return;
     if (!accessToken) { router.push("/login"); return; }
     fetchTodos();
-    fetchProfile();
   }, [ready, accessToken]);
 
   useEffect(() => {
@@ -109,12 +94,6 @@ export default function DashboardPage() {
     }
   };
 
-  const fetchProfile = async () => {
-    try {
-      const res = await fetch(`${API}/api/users/me`, { headers: authHeaders() });
-      if (res.ok) setProfile(await res.json());
-    } catch { /* non-critical */ }
-  };
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -386,49 +365,7 @@ export default function DashboardPage() {
 
         </div>{/* end todos column */}
 
-        {/* ── Profile panel ── */}
-        <div style={{ width: 260, flexShrink: 0, position: "sticky", top: 48 }}>
 
-          {/* Avatar + name */}
-          <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 12, padding: "24px 20px", marginBottom: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-              <div style={{ width: 42, height: 42, borderRadius: "50%", background: accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <span style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>
-                  {profile?.name?.[0]?.toUpperCase() ?? "?"}
-                </span>
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ margin: 0, fontWeight: 600, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.name ?? "—"}</p>
-                <p style={{ margin: 0, fontSize: 12, color: muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.email ?? "—"}</p>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 16 }}>
-              {[
-                { label: "Total", value: profile?.stats.total ?? "—" },
-                { label: "Done", value: profile?.stats.completed ?? "—" },
-                { label: "Rate", value: profile ? `${profile.stats.completionRate}%` : "—" },
-                { label: "Streak", value: profile ? `${profile.stats.streak}d` : "—" },
-              ].map(({ label, value }) => (
-                <div key={label} style={{ background: bg, borderRadius: 8, padding: "10px 12px" }}>
-                  <p style={{ margin: 0, fontSize: 11, color: muted, marginBottom: 2 }}>{label}</p>
-                  <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>{value}</p>
-                </div>
-              ))}
-            </div>
-
-            <p style={{ margin: 0, fontSize: 11, color: muted }}>
-              Member since {profile ? new Date(profile.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "—"}
-            </p>
-          </div>
-
-          {/* Heatmap */}
-          <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 12, overflow: "hidden" }}>
-            <Heatmap data={profile?.heatmap ?? {}} accent={accent} border={border} muted={muted} bg={bg} />
-          </div>
-
-        </div>
 
       </div>
     </main>
