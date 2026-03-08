@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
+import Link from "next/link";
 import DatePicker from "../components/DatePicker";
 import { useAuth } from "../providers/AuthProvider";
 
@@ -13,6 +14,19 @@ type Todo = {
   dueDate: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+type Profile = {
+  name: string;
+  email: string;
+  createdAt: string;
+  stats: {
+    total: number;
+    completed: number;
+    completionRate: number;
+    streak: number;
+  };
+  heatmap: Record<string, number>;
 };
 
 type Filter = "all" | "active" | "completed";
@@ -46,11 +60,118 @@ const isOverdue = (iso: string, completed: boolean) => {
   return new Date(iso) < new Date(new Date().setHours(0, 0, 0, 0));
 };
 
+// ── Heatmap component ────────────────────────────────────────────────────────
+
+function Heatmap({ data, accent, border, muted }: { data: Record<string, number>; accent: string; border: string; muted: string; bg: string }) {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 3 }, (_, i) => currentYear - i);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [tooltip, setTooltip] = useState<{ date: string; count: number; cx: number; cy: number } | null>(null);
+
+  const DAYS = 7;
+  const CELL = 4;
+  const GAP = 1;
+
+  const startDate = new Date(selectedYear, 0, 1);
+  const startDay = startDate.getDay(); // 0=Sun
+  const cells: ({ date: string; count: number } | null)[] = Array(startDay).fill(null);
+  const endDate = new Date(selectedYear, 11, 31);
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const key = d.toISOString().slice(0, 10);
+    cells.push({ date: key, count: data[key] ?? 0 });
+  }
+  while (cells.length % DAYS !== 0) cells.push(null);
+
+  const WEEKS = cells.length / DAYS;
+  const columns: ({ date: string; count: number } | null)[][] = [];
+  for (let w = 0; w < WEEKS; w++) columns.push(cells.slice(w * DAYS, w * DAYS + DAYS));
+
+  const max = Math.max(1, ...Object.values(data).filter(Boolean));
+  const getColor = (count: number) => {
+    if (count === 0) return border;
+    const intensity = Math.ceil((count / max) * 4);
+    const alphas = ["40", "70", "a0", "d0"];
+    return accent + (alphas[Math.min(intensity - 1, 3)] ?? "d0");
+  };
+
+  const monthLabels: { label: string; col: number }[] = [];
+  let lastMonth = -1;
+  columns.forEach((week, wi) => {
+    const firstReal = week.find(c => c !== null);
+    if (firstReal) {
+      const m = new Date(firstReal.date).getMonth();
+      if (m !== lastMonth) {
+        monthLabels.push({ label: new Date(firstReal.date).toLocaleDateString("en-US", { month: "short" }), col: wi });
+        lastMonth = m;
+      }
+    }
+  });
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: muted, textTransform: "uppercase", letterSpacing: "0.05em" }}>Completions</p>
+        <select
+          value={selectedYear}
+          onChange={e => setSelectedYear(Number(e.target.value))}
+          style={{ fontSize: 11, color: muted, background: "transparent", border: `1px solid ${border}`, borderRadius: 4, padding: "2px 6px", fontFamily: "inherit", cursor: "pointer" }}
+        >
+          {years.map(y => <option key={y} value={y}>{y}</option>)}
+        </select>
+      </div>
+
+      <div style={{ overflowX: "auto", overflowY: "visible" }}>
+        <div style={{ display: "inline-flex", flexDirection: "column", gap: 0 }}>
+          {/* Month label row */}
+          <div style={{ display: "flex", gap: GAP, marginBottom: 3 }}>
+            {columns.map((_, wi) => {
+              const lbl = monthLabels.find(m => m.col === wi);
+              return (
+                <div key={wi} style={{ width: CELL, flexShrink: 0, fontSize: 8, color: muted, whiteSpace: "nowrap", overflow: "visible" }}>
+                  {lbl?.label ?? ""}
+                </div>
+              );
+            })}
+          </div>
+          {/* Day columns */}
+          <div style={{ display: "flex", gap: GAP }}>
+            {columns.map((week, wi) => (
+              <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
+                {week.map((cell, di) => (
+                  <div
+                    key={di}
+                    style={{ width: CELL, height: CELL, borderRadius: 1, flexShrink: 0, background: cell ? getColor(cell.count) : "transparent" }}
+                    onMouseEnter={cell ? e => setTooltip({ date: cell.date, count: cell.count, cx: e.clientX, cy: e.clientY }) : undefined}
+                    onMouseLeave={() => setTooltip(null)}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {tooltip && tooltip.count > 0 && (
+        <div style={{
+          position: "fixed", pointerEvents: "none", zIndex: 1000,
+          left: tooltip.cx + 12, top: tooltip.cy - 32,
+          background: "#1a1a1a", color: "#fff", fontSize: 11, padding: "4px 8px", borderRadius: 4, whiteSpace: "nowrap",
+        }}>
+          {tooltip.count} completion{tooltip.count !== 1 ? "s" : ""} · {new Date(tooltip.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function DashboardPage() {
   const router = useRouter();
   const theme = useTheme();
   const { accessToken, refresh, logout, ready } = useAuth();
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("created");
   const [newTitle, setNewTitle] = useState("");
@@ -75,6 +196,7 @@ export default function DashboardPage() {
     if (!ready) return;
     if (!accessToken) { router.push("/login"); return; }
     fetchTodos();
+    fetchProfile();
   }, [ready, accessToken]);
 
   useEffect(() => {
@@ -91,6 +213,13 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch(`${API}/api/users/me`, { headers: authHeaders() });
+      if (res.ok) setProfile(await res.json());
+    } catch { /* non-critical */ }
   };
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -189,7 +318,10 @@ export default function DashboardPage() {
 
   return (
     <main style={{ flex: 1, background: bg, color: text, fontFamily: "inherit", padding: "48px 32px", display: "flex", justifyContent: "center", overflowY: "auto" }}>
-      <div style={{ width: "100%", maxWidth: 680 }}>
+      <div style={{ width: "100%", maxWidth: 1100, display: "flex", gap: 32, alignItems: "flex-start" }}>
+
+        {/* ── Todos column ── */}
+        <div style={{ flex: 1, minWidth: 0 }}>
 
 
 
@@ -231,7 +363,7 @@ export default function DashboardPage() {
           <div style={{ flex: 1 }}>
             <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 22 }}>My todos</p>
             <p style={{ margin: 0, fontSize: 14, color: allDone ? accent : muted, fontWeight: allDone ? 600 : 400, transition: "color 0.3s" }}>
-              {allDone ? "All done! Great work!" : `${todos.filter(t => !t.completed).length} remaining`}
+              {allDone ? "All done! Great work 🎉" : `${todos.filter(t => !t.completed).length} remaining`}
             </p>
             {total > 0 && !allDone && (
               <p style={{ margin: "2px 0 0", fontSize: 12, color: muted }}>{completed} of {total} completed</p>
@@ -273,7 +405,7 @@ export default function DashboardPage() {
         {/* Todo list */}
         <div style={{ display: "flex", flexDirection: "column", gap: 1, border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
           {filtered.length === 0 ? (
-            <div style={{ padding: "32px", textAlign: "center", color: muted, fontSize: 14, background: paper }}>
+            <div key="empty" style={{ padding: "32px", textAlign: "center", color: muted, fontSize: 14, background: paper }}>
               {filter === "completed" ? "No completed todos yet." : filter === "active" ? "No active todos. All done!" : "No todos yet. Add one above."}
             </div>
           ) : filtered.map((todo, i) => {
@@ -356,6 +488,52 @@ export default function DashboardPage() {
               </div>
             );
           })}
+        </div>{/* end todo list */}
+
+        </div>{/* end todos column */}
+
+        {/* ── Profile panel ── */}
+        <div style={{ width: 260, flexShrink: 0, position: "sticky", top: 48 }}>
+
+          {/* Avatar + name */}
+          <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 12, padding: "24px 20px", marginBottom: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ width: 42, height: 42, borderRadius: "50%", background: accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>
+                  {profile?.name?.[0]?.toUpperCase() ?? "?"}
+                </span>
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ margin: 0, fontWeight: 600, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.name ?? "—"}</p>
+                <p style={{ margin: 0, fontSize: 12, color: muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.email ?? "—"}</p>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 16 }}>
+              {[
+                { label: "Total", value: profile?.stats.total ?? "—" },
+                { label: "Done", value: profile?.stats.completed ?? "—" },
+                { label: "Rate", value: profile ? `${profile.stats.completionRate}%` : "—" },
+                { label: "Streak", value: profile ? `${profile.stats.streak}d` : "—" },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ background: bg, borderRadius: 8, padding: "10px 12px" }}>
+                  <p style={{ margin: 0, fontSize: 11, color: muted, marginBottom: 2 }}>{label}</p>
+                  <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>{value}</p>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ margin: 0, fontSize: 11, color: muted }}>
+              Member since {profile ? new Date(profile.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "—"}
+            </p>
+          </div>
+
+          {/* Heatmap */}
+          <div style={{ background: paper, border: `1px solid ${border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 12, overflow: "hidden" }}>
+            <Heatmap data={profile?.heatmap ?? {}} accent={accent} border={border} muted={muted} bg={bg} />
+          </div>
+
         </div>
 
       </div>
