@@ -5,7 +5,7 @@
   "workspaces": ["backend", "frontend"],
   "scripts": {
     "dev": "docker compose up -d && concurrently --kill-others-on-fail \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
-    "format": "npm run format --workspace=backend && npm run format --workspace=frontend",
+    "format": "npm run format --workspace=backend && npm run format --workspace=frontend && terraform fmt -recursive",
     "resetdb": "npm run resetdb --workspace=backend",
     "test": "npm run test --workspace=backend",
     "stop": "docker compose down"
