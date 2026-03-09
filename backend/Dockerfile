@@ -1,4 +1,3 @@
-# ── Stage 1: build ────────────────────────────────────────────────────────────
 FROM node:22-alpine AS builder
 
 WORKDIR /app
@@ -16,7 +15,6 @@ COPY prisma.config.ts ./
 RUN npx prisma generate
 RUN npm run build
 
-# ── Stage 2: production ────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 
 WORKDIR /app
@@ -28,7 +26,6 @@ COPY prisma ./prisma/
 
 RUN npm ci --omit=dev
 
-# Copy compiled output and generated prisma client
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/generated ./src/generated
 
