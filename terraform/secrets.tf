@@ -18,6 +18,7 @@ resource "aws_secretsmanager_secret_version" "db" {
   })
 }
 
+
 resource "aws_secretsmanager_secret" "jwt" {
   name                    = "${var.project}/jwt-secrets"
   recovery_window_in_days = 7
@@ -33,6 +34,7 @@ resource "aws_secretsmanager_secret_version" "jwt" {
     JWT_REFRESH_SECRET = var.jwt_refresh_secret
   })
 }
+
 
 resource "aws_iam_policy" "secrets_read" {
   name        = "${var.project}-secrets-read"
@@ -55,6 +57,7 @@ resource "aws_iam_policy" "secrets_read" {
     ]
   })
 }
+
 
 data "aws_iam_policy_document" "backend_assume" {
   statement {
