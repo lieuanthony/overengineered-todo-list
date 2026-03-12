@@ -39,6 +39,7 @@ provider "helm" {
 
 resource "aws_s3_bucket" "tfstate" {
   bucket = "${var.project}-tfstate"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "tfstate" {
