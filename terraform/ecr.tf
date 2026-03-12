@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "backend" {
-  name                 = "overengineered-todo-list/backend"
+  name                 = "${var.project}/backend"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -8,7 +8,7 @@ resource "aws_ecr_repository" "backend" {
 }
 
 resource "aws_ecr_repository" "frontend" {
-  name                 = "overengineered-todo-list/frontend"
+  name                 = "${var.project}/frontend"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
