@@ -151,19 +151,14 @@ resource "helm_release" "alb_controller" {
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
+  wait       = false
 
-  values = [
-    jsonencode({
-      clusterName = aws_eks_cluster.main.name
-      serviceAccount = {
-        create = true
-        name   = "aws-load-balancer-controller"
-        annotations = {
-          "eks.amazonaws.com/role-arn" = aws_iam_role.alb_controller.arn
-        }
-      }
-    })
-  ]
+  values = [templatefile("${path.module}/alb-controller-values.yaml", {
+    role_arn = aws_iam_role.alb_controller.arn
+    vpc_id   = aws_vpc.main.id
+    region   = var.aws_region
+    cluster  = aws_eks_cluster.main.name
+  })]
 
   depends_on = [aws_eks_node_group.main]
 }
