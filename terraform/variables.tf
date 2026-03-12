@@ -39,3 +39,8 @@ variable "jwt_refresh_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "github_org" {
+  description = "GitHub organization or username"
+  type        = string
+}
