@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "db" {
-  name                    = "${var.project}/db-credentials"
+  name                    = "${var.project}/db-credentials-v2"
   recovery_window_in_days = 0
 
   tags = { Name = "${var.project}-db-credentials" }
@@ -20,7 +20,7 @@ resource "aws_secretsmanager_secret_version" "db" {
 
 
 resource "aws_secretsmanager_secret" "jwt" {
-  name                    = "${var.project}/jwt-secrets"
+  name                    = "${var.project}/jwt-secrets-v2"
   recovery_window_in_days = 0
 
   tags = { Name = "${var.project}-jwt-secrets" }
